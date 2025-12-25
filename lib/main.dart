@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/login_screen.dart'; // We will create this file shortly
+import 'screens/login_screen.dart'; 
 
 void main() {
   runApp(const RestaurantApp());
