@@ -19,175 +19,181 @@ class HomeScreen extends StatelessWidget {
               currentAccountPicture: CircleAvatar(
                 backgroundColor: Colors.white,
                 child: Text("Y", style: TextStyle(fontSize: 40.0, color: Colors.deepOrange)),
-              ), // CircleAvatar
+              ),
               decoration: BoxDecoration(color: Colors.deepOrange),
-            ), // UserAccountsDrawerHeader
+            ),
             ListTile(
               leading: Icon(Icons.restaurant_menu, color: Colors.deepOrange),
               title: Text('Menu'),
               onTap: () => Navigator.pop(context),
-            ), // ListTile
+            ),
             ListTile(
-              leading: Icon(Icons.history, color: Colors.deepOrange),
+              leading: Icon(Icons.history),
               title: Text('Order History'),
               onTap: () => Navigator.pop(context),
-            ), // ListTile
+            ),
             ListTile(
-              leading: Icon(Icons.settings, color: Colors.deepOrange),
+              leading: Icon(Icons.settings),
               title: Text('Settings'),
               onTap: () => Navigator.pop(context),
-            ), // ListTile
+            ),
             Divider(),
             ListTile(
-              leading: Icon(Icons.logout, color: Colors.grey),
+              leading: Icon(Icons.logout),
               title: Text('Logout'),
               onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const LoginScreen()),
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                  (Route<dynamic> route) => false,
                 );
               },
-            ), // ListTile
+            ),
           ],
-        ), // ListView
-      ), // Drawer
+        ),
+      ),
+      
       appBar: AppBar(
-        title: const Text('Restaurant App', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        title: Text('Menu', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
         backgroundColor: Colors.deepOrange,
         foregroundColor: Colors.white,
-        elevation: 0,
+        elevation: 2,
+        centerTitle: true,
         actions: [
+          // *** إضافة 2: تفعيل الزر للانتقال لصفحة الملف الشخصي ***
           IconButton(
-            icon: const Icon(Icons.person),
+            icon: Icon(Icons.person_outline),
             onPressed: () {
-              // *** إضافة 2: الانتقال لشاشة الملف الشخصي عند الضغط على الأيقونة ***
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const ProfileScreen()),
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => ProfileScreen()),
               );
             },
-          ), // IconButton
+          ),
+          SizedBox(width: 10),
         ],
-      ), // AppBar
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Banner Section
-            Container(
-              height: 200,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.deepOrange,
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(30),
-                  bottomRight: Radius.circular(30),
+      ),
+
+      body: ListView(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16.0, 20.0, 16.0, 16.0),
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: 'Search for a dish...',
+                prefixIcon: Icon(Icons.search, color: Colors.orange),
+                filled: true,
+                fillColor: Colors.grey[100],
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30.0),
+                  borderSide: BorderSide.none,
                 ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Welcome to\nDelicious Bites!',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    const Text(
-                      'What would you like to eat today?',
-                      style: TextStyle(color: Colors.white70, fontSize: 16),
-                    ),
-                  ],
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30.0),
+                  borderSide: BorderSide(color: Colors.deepOrange, width: 2.0),
                 ),
               ),
             ),
-            const SizedBox(height: 20),
-            // Categories Section
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.0),
-              child: Text(
-                'Categories',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(15.0),
+              child: Image.network(
+                'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800',
+                height: 180,
+                fit: BoxFit.cover,
+               ),
+            ),
+          ),
+          SizedBox(height: 24),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Text(
+              'Popular Dishes',
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Colors.deepOrange.shade700,
               ),
             ),
-            const SizedBox(height: 10),
-            SizedBox(
-              height: 100,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 15),
+          ),
+          SizedBox(height: 10),
+          MenuItemCard(
+            title: 'Beef Burger',
+            description: 'Grilled beef patty with cheese, lettuce, and tomato.',
+            price: '\$12.99',
+            imageUrl: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800',
+           ),
+          MenuItemCard(
+            title: 'Margherita Pizza',
+            description: 'Italian dough with tomato sauce and mozzarella cheese.',
+            price: '\$15.50',
+            imageUrl: 'https://images.unsplash.com/photo-1594007654729-407eedc4be65?w=800',
+           ),
+        ],
+      ),
+    );
+  }
+}
+
+class MenuItemCard extends StatelessWidget {
+  final String title;
+  final String description;
+  final String price;
+  final String imageUrl;
+
+  const MenuItemCard({
+    super.key,
+    required this.title,
+    required this.description,
+    required this.price,
+    required this.imageUrl,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      elevation: 3,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      clipBehavior: Clip.antiAlias,
+      child: Row(
+        children: [
+          Image.network(
+            imageUrl,
+            width: 120,
+            height: 120,
+            fit: BoxFit.cover,
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  _buildCategoryItem(Icons.local_pizza, 'Pizza'),
-                  _buildCategoryItem(Icons.lunch_dining, 'Burgers'),
-                  _buildCategoryItem(Icons.icecream, 'Desserts'),
-                  _buildCategoryItem(Icons.local_drink, 'Drinks'),
-                  _buildCategoryItem(Icons.set_meal, 'Seafood'),
+                  Text(
+                    title,
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    description,
+                    style: TextStyle(color: Colors.grey[700], fontSize: 14),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    price,
+                    style: TextStyle(fontSize: 16, color: Colors.deepOrange, fontWeight: FontWeight.bold),
+                  ),
                 ],
               ),
             ),
-            const SizedBox(height: 20),
-            // Popular Items Section
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.0),
-              child: Text(
-                'Popular Items',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-            ),
-            const SizedBox(height: 10),
-            _buildPopularItem('Classic Cheeseburger', 'Juicy beef patty with cheddar', '\$12.99'),
-            _buildPopularItem('Margherita Pizza', 'Fresh basil and mozzarella', '\$14.50'),
-            _buildPopularItem('Chocolate Lava Cake', 'Warm chocolate center', '\$7.99'),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildCategoryItem(IconData icon, String label) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5),
-      child: Column(
-        children: [
-          CircleAvatar(
-            radius: 30,
-            backgroundColor: Colors.orange.shade100,
-            child: Icon(icon, color: Colors.deepOrange, size: 30),
           ),
-          const SizedBox(height: 5),
-          Text(label, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
         ],
-      ),
-    );
-  }
-
-  Widget _buildPopularItem(String title, String subtitle, String price) {
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      elevation: 2,
-      child: ListTile(
-        contentPadding: const EdgeInsets.all(10),
-        leading: Container(
-          width: 60,
-          height: 60,
-          decoration: BoxDecoration(
-            color: Colors.orange.shade50,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: const Icon(Icons.fastfood, color: Colors.orange),
-        ),
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Text(subtitle),
-        trailing: Text(
-          price,
-          style: const TextStyle(color: Colors.deepOrange, fontWeight: FontWeight.bold, fontSize: 16),
-        ),
       ),
     );
   }
